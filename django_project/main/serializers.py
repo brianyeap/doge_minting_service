@@ -12,3 +12,7 @@ from rest_framework.validators import UniqueValidator
 
 class CreateWalletSerializer(serializers.Serializer):
     count = serializers.IntegerField()
+
+
+class QueryBalance(serializers.Serializer):
+    wallet_data = serializers.CharField(max_length=500)
