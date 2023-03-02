@@ -43,12 +43,13 @@ def api_create_wallet(request):
     if serializer.is_valid():
         # Navigate to the doginals directory
         directory_path = '/home/semi/Desktop/doginals'
-        subprocess.check_output(['cd', directory_path])
+        os.chdir(directory_path)
 
         # Execute the command
         command = 'node . wallet new'
         output = subprocess.check_output(command.split())
         print(output)
+
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
 
     else:
