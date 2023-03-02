@@ -45,12 +45,15 @@ def api_create_wallet(request):
         directory_path = '/home/semi/Desktop/doginals'
         os.chdir(directory_path)
 
-        # Execute the command
+        # Create wallet
         command = 'node . wallet new'
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
         if "wallet already exists" in str(output):
             command = 'rm -rf .wallet.json'
+            subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+            command = 'node . wallet new'
             output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
