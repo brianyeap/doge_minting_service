@@ -54,7 +54,10 @@ def api_create_wallet(request):
             subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
             command = 'node . wallet new'
-            output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+            subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+            command = 'cat .wallet.json'
+            output = subprocess.check_output(command.split())
 
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
 
