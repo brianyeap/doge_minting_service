@@ -31,13 +31,26 @@ from django.conf import settings
 from datetime import timezone
 
 
+import os
+import subprocess
+
+
 # Create your views here.
 
 @api_view(['POST'])
 def api_create_wallet(request):
     serializer = CreateWalletSerializer(data=request.data)
     if serializer.is_valid():
-        print(serializer.validated_data['count'])
+        # Navigate to the doginals directory
+        directory_path = '/home/semi/Desktop/doginals'
+        subprocess.check_output(['cd', directory_path])
+
+        # Execute the command
+        command = 'node . wallet new'
+        output = subprocess.check_output(command.split())
+        print(output)
+        return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
+
     else:
         return Response({"status": 0, "message": [str(serializer), serializer.errors]},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
