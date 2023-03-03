@@ -85,7 +85,10 @@ def api_query_bal(request):
         with open(f'.wallet.json', 'w') as f:
             json.dump(input_dict, f, indent=4)
 
-        return Response({"status": 1, "message": "Success"}, status=status.HTTP_200_OK)
+        command = 'node . wallet sync'
+        output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
 
     else:
         return Response({"status": 0, "message": [str(serializer), serializer.errors]},
