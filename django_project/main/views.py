@@ -156,7 +156,7 @@ def api_send_funds(request):
         # Send funds
         receiver_address = serializer.validated_data["receiver_address"]
         quantity = int(serializer.validated_data["quantity"] * 10**8)
-        f'node . wallet send {receiver_address} {quantity}'
+        print(f'node . wallet send {receiver_address} {quantity}')
         command = f'node . wallet send {receiver_address} {quantity}'
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
