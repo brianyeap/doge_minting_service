@@ -4,8 +4,10 @@ import requests
 import json
 import random
 import threading
+import base64
 
 WALLETS_FOLDER_PATH = 'off_chain/wallets'
+IMAGES_FOLDER_PATH = 'off_chain/images'
 
 
 def create_wallet(count):
@@ -37,8 +39,25 @@ def create_wallet(count):
     return 1
 
 
-for filename in os.listdir(WALLETS_FOLDER_PATH):
-    if filename.endswith('.json'):
-        with open(os.path.join(WALLETS_FOLDER_PATH, filename), 'r') as f:
-            wallet_data = json.load(f)
-            print(wallet_data)
+def mint_nft(file_path):
+    with open(file_path, "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read())
+
+        url = "http://127.0.0.1:8080/api/mint_nft/"
+        payload = json.dumps({
+            "base64": encoded_string.decode()
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
+
+
+# for filename in os.listdir(WALLETS_FOLDER_PATH):
+#     if filename.endswith('.json'):
+#         with open(os.path.join(WALLETS_FOLDER_PATH, filename), 'r') as f:
+#             wallet_data = json.load(f)
+#             print(wallet_data)
+
+mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')

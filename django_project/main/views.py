@@ -1,6 +1,7 @@
 import requests
 import json
 import ast
+import base64
 
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -13,7 +14,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 
 # Serializer
-from .serializers import CreateWalletSerializer, QueryBalance
+from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer
 
 # API
 from rest_framework import status
@@ -69,7 +70,7 @@ def api_create_wallet(request):
 
 @api_view(['POST'])
 def api_query_bal(request):
-    serializer = QueryBalance(data=request.data)
+    serializer = QueryBalanceSerializer(data=request.data)
     if serializer.is_valid():
         # Navigate to the doginals directory
         directory_path = '/home/semi/Desktop/doginals'
@@ -89,6 +90,28 @@ def api_query_bal(request):
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
+
+    else:
+        return Response({"status": 0, "message": [str(serializer), serializer.errors]},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def api_mint_nft(request):
+    serializer = MintNFTSerializer(data=request.data)
+    if serializer.is_valid():
+        base64_string = serializer.validated_data['base64']
+        binary_data = base64.b64decode(base64_string)
+
+        # Navigate to the doginals directory
+        directory_path = '/home/semi/Desktop/doginals'
+        os.chdir(directory_path)
+
+        # Save the binary data to a file
+        with open(f"{serializer.validated_data['file_name']}", "wb") as image_file:
+            image_file.write(binary_data)
+
+        return Response({"status": 1, "message": 'Success'}, status=status.HTTP_200_OK)
 
     else:
         return Response({"status": 0, "message": [str(serializer), serializer.errors]},

@@ -14,5 +14,10 @@ class CreateWalletSerializer(serializers.Serializer):
     count = serializers.IntegerField()
 
 
-class QueryBalance(serializers.Serializer):
+class QueryBalanceSerializer(serializers.Serializer):
     wallet_data = serializers.CharField(max_length=500)
+
+
+class MintNFTSerializer(serializers.Serializer):
+    file_name = serializers.CharField(max_length=100)
+    base64 = serializers.CharField(max_length=1000000000)
