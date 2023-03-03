@@ -43,7 +43,6 @@ def create_wallet(count):
 def query_bal(wallet_file):
     with open(wallet_file) as file:
         data = file.read()
-        print(type(data))
         url = "http://49.206.31.38:8000/api/query_bal/"
         payload = json.dumps({
             "wallet_data": data

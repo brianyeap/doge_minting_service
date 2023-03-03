@@ -101,6 +101,24 @@ def api_query_bal(request):
 
 
 @api_view(['POST'])
+def api_query_bal_no_wallet(request):
+    serializer = QueryBalanceSerializer(data=request.data)
+    if serializer.is_valid():
+        # Navigate to the doginals directory
+        directory_path = '/home/semi/Desktop/doginals'
+        os.chdir(directory_path)
+
+        command = 'node . wallet sync'
+        output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
+
+    else:
+        return Response({"status": 0, "message": [str(serializer), serializer.errors]},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
 def api_mint_nft(request):
     serializer = MintNFTSerializer(data=request.data)
     if serializer.is_valid():
@@ -130,6 +148,8 @@ def api_mint_nft(request):
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
         data_dict = json.loads(output)
         address = data_dict['address']
+
+        time.sleep(5)
 
         # Mint NFT
         command = f'node . mint {address} {serializer.validated_data["file_name"]}.png'
