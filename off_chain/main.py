@@ -39,12 +39,28 @@ def create_wallet(count):
     return 1
 
 
+def query_bal(wallet_file):
+    with open(wallet_file) as file:
+        data = file.read()
+        url = "http://49.206.31.38:8000/api/query_bal/"
+        payload = json.dumps({
+            "wallet_data": data
+        })
+        headers = {
+            'Content-Type': 'application/json'
+        }
+        response = requests.request("POST", url, headers=headers, data=payload)
+        print(response.text)
+
+
 def mint_nft(file_path):
     with open(file_path, "rb") as image_file:
+        file_name = os.path.basename(file_path)
         encoded_string = base64.b64encode(image_file.read())
 
-        url = "http://127.0.0.1:8080/api/mint_nft/"
+        url = "http://49.206.31.38:8000/api/mint_nft/"
         payload = json.dumps({
+            "file_name": file_name,
             "base64": encoded_string.decode()
         })
         headers = {
@@ -60,4 +76,6 @@ def mint_nft(file_path):
 #             wallet_data = json.load(f)
 #             print(wallet_data)
 
-mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
+# mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
+
+query_bal(f"{WALLETS_FOLDER_PATH}/wallet_1276373877.json")
