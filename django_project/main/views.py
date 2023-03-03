@@ -135,7 +135,7 @@ def api_mint_nft(request):
 
 
 @api_view(['POST'])
-def api_Send_funds(request):
+def api_send_funds(request):
     serializer = SendFundsSerializer(data=request.data)
     if serializer.is_valid():
         # Navigate to the doginals directory

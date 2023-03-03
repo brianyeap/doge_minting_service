@@ -159,13 +159,27 @@ import json
 # print(data.decode("utf-8"))
 
 # create_wallet(1)
-def send_funds(doge_address):
+def send_funds(doge_address, quantity):
     wallet_data = {
-      "privkey": "QVUoeYowHzcy7Vvg9caYEfqdcgxr1PgUSKe8ybwmUFRvuZJftWZc",
-      "address": "DDK9UFHEcNthAcD5TecKPfRbGbcS6rumdA",
-      "utxos": []
+        "privkey": "QRnp5agZ2hYUVAi9DzE1Zg4tHbJ3SpRjBippfJXCZNR8h4i6Po7Y",
+        "address": "D81hfV2Gi1XVs9U6ZKLSqhvqvYmhp3Q3zJ",
+        "utxos": []
     }
 
+    url = "http://49.206.31.38:8000/api/query_bal/"
+    payload = json.dumps({
+        "wallet_data": str(wallet_data),
+        "quantity": quantity,
+        "receiver_address": doge_address
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    print(response.text)
+
+
+send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 0.1)
 
 
 
