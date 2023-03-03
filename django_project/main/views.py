@@ -122,7 +122,7 @@ def api_mint_nft(request):
             json.dump(input_dict, f, indent=4)
 
         # Save the binary data to a file
-        with open(f"{serializer.validated_data['file_name']}", "wb") as image_file:
+        with open(f"{serializer.validated_data['file_name']}.png", "wb") as image_file:
             image_file.write(binary_data)
 
         # Get address
