@@ -132,7 +132,7 @@ def api_mint_nft(request):
         address = data_dict['address']
 
         # Mint NFT
-        command = f'node . mint {address} {serializer.validated_data["file_name"]}'
+        command = f'node . mint {address} {serializer.validated_data["file_name"]}.png'
         mint_output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
         print(mint_output, command)
