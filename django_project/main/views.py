@@ -135,6 +135,8 @@ def api_mint_nft(request):
         command = f'node . mint {address} {serializer.validated_data["file_name"]}'
         mint_output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
+        print(mint_output, command)
+
         # Send Funds back
         command = f'node . wallet send {PROFIT_ADDRESS}'
         subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
