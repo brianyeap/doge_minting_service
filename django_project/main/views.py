@@ -1,3 +1,5 @@
+import time
+
 import requests
 import json
 import ast
@@ -152,6 +154,8 @@ def api_send_funds(request):
         # Create the wallet.json file
         with open(f'.wallet.json', 'w') as f:
             json.dump(input_dict, f, indent=4)
+
+        time.sleep(1)
 
         # Send funds
         receiver_address = serializer.validated_data["receiver_address"]
