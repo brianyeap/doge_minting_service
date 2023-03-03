@@ -111,6 +111,16 @@ def api_mint_nft(request):
         directory_path = '/home/semi/Desktop/doginals'
         os.chdir(directory_path)
 
+        # Remove wallet
+        command = 'rm -rf .wallet.json'
+        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        input_dict = ast.literal_eval(serializer.validated_data["wallet_data"])
+
+        # Create the wallet.json file
+        with open(f'.wallet.json', 'w') as f:
+            json.dump(input_dict, f, indent=4)
+
         # Save the binary data to a file
         with open(f"{serializer.validated_data['file_name']}", "wb") as image_file:
             image_file.write(binary_data)

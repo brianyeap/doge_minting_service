@@ -43,6 +43,7 @@ def create_wallet(count):
 def query_bal(wallet_file):
     with open(wallet_file) as file:
         data = file.read()
+        print(type(data))
         url = "http://49.206.31.38:8000/api/query_bal/"
         payload = json.dumps({
             "wallet_data": data
@@ -112,7 +113,7 @@ def main():
     mint_nft(f'{IMAGES_FOLDER_PATH}/dogewow.png')
 
 
-main()
+# main()
 
 import http.client
 import json
@@ -190,12 +191,12 @@ def empty_wallet(doge_address):
     return response.text
 
 
-# files = os.listdir(WALLETS_FOLDER_PATH)
-# first_file = files[0]
+files = os.listdir(WALLETS_FOLDER_PATH)
+first_file = files[0]
 #
 # # create_wallet(1)
 # # send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 1)
 # print(empty_wallet("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS"))
-# print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
+print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
 
 
