@@ -176,10 +176,31 @@ def send_funds(doge_address, quantity):
         'Content-Type': 'application/json'
     }
     response = requests.request("POST", url, headers=headers, data=payload)
-    print(response.text)
+    return response.text
+
+
+def empty_wallet(doge_address):
+    wallet_data = {
+        "privkey": "QRnp5agZ2hYUVAi9DzE1Zg4tHbJ3SpRjBippfJXCZNR8h4i6Po7Y",
+        "address": "D81hfV2Gi1XVs9U6ZKLSqhvqvYmhp3Q3zJ",
+        "utxos": []
+    }
+
+    url = "http://49.206.31.38:8000/api/send_funds/"
+    payload = json.dumps({
+        "wallet_data": str(wallet_data),
+        "quantity": quantity,
+        "receiver_address": doge_address
+    })
+    headers = {
+        'Content-Type': 'application/json'
+    }
+    response = requests.request("POST", url, headers=headers, data=payload)
+    return response.text
+
 
 files = os.listdir(WALLETS_FOLDER_PATH)
 first_file = files[0]
 
-send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 0.1)
+send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 1)
 print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
