@@ -155,7 +155,8 @@ def api_send_funds(request):
         with open(f'.wallet.json', 'w') as f:
             json.dump(input_dict, f, indent=4)
 
-        time.sleep(1)
+        command = 'node . wallet sync'
+        print(subprocess.check_output(command.split(), stderr=subprocess.STDOUT))
 
         # Send funds
         receiver_address = serializer.validated_data["receiver_address"]
