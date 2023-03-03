@@ -76,6 +76,6 @@ def mint_nft(file_path):
 #             wallet_data = json.load(f)
 #             print(wallet_data)
 
-# mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
+mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
 
 query_bal(f"{WALLETS_FOLDER_PATH}/wallet_1276373877.json")

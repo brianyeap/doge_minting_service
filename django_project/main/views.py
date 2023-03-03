@@ -115,7 +115,11 @@ def api_mint_nft(request):
         command = f'cat .wallet.json'
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
-        return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
+        # Get address
+        data_dict = json.loads(output)
+        address = data_dict['address']
+
+        return Response({"status": 1, "message": address}, status=status.HTTP_200_OK)
 
     else:
         return Response({"status": 0, "message": [str(serializer), serializer.errors]},
