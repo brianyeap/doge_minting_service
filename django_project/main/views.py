@@ -129,19 +129,12 @@ def api_mint_nft(request):
         directory_path = '/home/semi/Desktop/doginals'
         os.chdir(directory_path)
 
-        # Remove wallet
-        command = 'rm -rf .wallet.json'
-        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
-
-        input_dict = ast.literal_eval(serializer.validated_data["wallet_data"])
-
-        # Create the wallet.json file
-        with open(f'.wallet.json', 'w') as f:
-            json.dump(input_dict, f, indent=4)
-
         # Save the binary data to a file
         with open(f"{serializer.validated_data['file_name']}.png", "wb") as image_file:
             image_file.write(binary_data)
+
+        command = f'node . wallet sync'
+        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
         # Get address
         command = f'cat .wallet.json'
@@ -149,7 +142,7 @@ def api_mint_nft(request):
         data_dict = json.loads(output)
         address = data_dict['address']
 
-        time.sleep(5)
+        time.sleep(1)
 
         # Mint NFT
         command = f'node . mint {address} {serializer.validated_data["file_name"]}.png'
