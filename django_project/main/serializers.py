@@ -24,6 +24,6 @@ class MintNFTSerializer(serializers.Serializer):
 
 
 class SendFundsSerializer(serializers.Serializer):
-    quantity = serializers.IntegerField()
+    quantity = serializers.FloatField()
     wallet_data = serializers.CharField(max_length=500)
     receiver_address = serializers.CharField(max_length=100)

