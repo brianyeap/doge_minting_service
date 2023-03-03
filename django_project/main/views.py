@@ -103,6 +103,7 @@ def api_query_bal(request):
 @api_view(['POST'])
 def api_query_bal_no_wallet(request):
     serializer = QueryBalanceSerializer(data=request.data)
+    print(serializer)
     if serializer.is_valid():
         # Navigate to the doginals directory
         directory_path = '/home/semi/Desktop/doginals'
