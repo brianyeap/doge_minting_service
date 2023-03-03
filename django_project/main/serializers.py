@@ -21,3 +21,9 @@ class QueryBalanceSerializer(serializers.Serializer):
 class MintNFTSerializer(serializers.Serializer):
     file_name = serializers.CharField(max_length=100)
     base64 = serializers.CharField(max_length=1000000000)
+
+
+class SendFundsSerializer(serializers.Serializer):
+    quantity = serializers.IntegerField()
+    wallet_data = serializers.CharField(max_length=500)
+    receiver_address = serializers.CharField(max_length=100)

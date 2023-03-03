@@ -34,6 +34,7 @@ def create_wallet(count):
 
         t = threading.Thread(target=temp_func)
         t.start()
+        t.join()
         i += 1
         time.sleep(0.4)
     return 1
@@ -50,7 +51,10 @@ def query_bal(wallet_file):
             'Content-Type': 'application/json'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        print(response.text)
+        json_data = response.json()
+        if json_data["status"] == 1:
+            balance = json_data["message"].split('balance ')[1]
+            return balance
 
 
 def mint_nft(file_path):
@@ -67,7 +71,10 @@ def mint_nft(file_path):
             'Content-Type': 'application/json'
         }
         response = requests.request("POST", url, headers=headers, data=payload)
-        print(response.text)
+        json_data = response.json()
+        if json_data["status"] == 1:
+            tx_id = json_data["message"].split('txid: ')[1]
+            print(tx_id)
 
 
 # for filename in os.listdir(WALLETS_FOLDER_PATH):
@@ -76,6 +83,93 @@ def mint_nft(file_path):
 #             wallet_data = json.load(f)
 #             print(wallet_data)
 
-mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
+# mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
 
-query_bal(f"{WALLETS_FOLDER_PATH}/wallet_1276373877.json")
+def main():
+    delete_folder = input("Delete wallet y/n?:")
+    if delete_folder.lower() == 'y':
+        for filename in os.listdir(WALLETS_FOLDER_PATH):
+            file_path = os.path.join(WALLETS_FOLDER_PATH, filename)
+            try:
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
+            except Exception as e:
+                print(f"Error deleting file: {file_path} - {e}")
+        create_wallet(3)
+    files = os.listdir(WALLETS_FOLDER_PATH)
+    first_file = files[0]
+
+    while True:
+        balance = int(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
+        if balance != 0:
+            print(f"Balance: {balance}")
+            break
+        else:
+            with open(f"{WALLETS_FOLDER_PATH}/{first_file}") as file:
+                address = json.loads(file.read())['address']
+            print(f'Wallet Balance 0!\nSend Doge: {address}')
+            input("Done?: ")
+    mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
+
+
+# main()
+
+import http.client
+import json
+
+
+# conn = http.client.HTTPSConnection("api.commerce.coinbase.com")
+# payload = json.dumps({
+#   "name": "Buy Mint Token",
+#   "description": "Buy Mint token to mint NFT",
+#   "pricing_type": "fixed_price",
+#   "local_price": {
+#     "amount": "0.1",
+#     "currency": "USD"
+#   },
+#   "metadata": {
+#     "customer_id": "brian",
+#     "customer_name": "brian"
+#   },
+#   "redirect_url": "https://dogecoinmonkeys.web.app/"
+# })
+# headers = {
+#   'Content-Type': 'application/json',
+#   'Accept': 'application/json',
+#   'X-CC-Api-Key': 'f7ed034d-f942-4c21-9f7f-af748112a019'
+# }
+# conn.request("POST", "/charges", payload, headers)
+# res = conn.getresponse()
+# data = res.read()
+# print(data.decode("utf-8"))
+
+# import http.client
+# import json
+#
+# conn = http.client.HTTPSConnection("api.commerce.coinbase.com")
+# payload = ''
+# headers = {
+#   'Content-Type': 'application/json',
+#   'Accept': 'application/json',
+#   'X-CC-Version': 'f7ed034d-f942-4c21-9f7f-af748112a019'
+# }
+# conn.request("GET", "/charges/FCY4QWD2", payload, headers)
+# res = conn.getresponse()
+# data = res.read()
+# print(data.decode("utf-8"))
+
+# create_wallet(1)
+def send_funds(doge_address):
+    wallet_data = {
+      "privkey": "QVUoeYowHzcy7Vvg9caYEfqdcgxr1PgUSKe8ybwmUFRvuZJftWZc",
+      "address": "DDK9UFHEcNthAcD5TecKPfRbGbcS6rumdA",
+      "utxos": []
+    }
+
+
+
+
+files = os.listdir(WALLETS_FOLDER_PATH)
+first_file = files[0]
+
+print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))

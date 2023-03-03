@@ -14,7 +14,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 
 # Serializer
-from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer
+from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer
 
 # API
 from rest_framework import status
@@ -35,6 +35,8 @@ from datetime import timezone
 
 import os
 import subprocess
+
+PROFIT_ADDRESS = 'DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS'
 
 
 # Create your views here.
@@ -119,10 +121,44 @@ def api_mint_nft(request):
 
         # Mint NFT
         command = f'node . mint {address} {serializer.validated_data["file_name"]}'
+        mint_output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        # Send Funds back
+        command = f'node . wallet send {PROFIT_ADDRESS}'
+        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        return Response({"status": 1, "message": mint_output}, status=status.HTTP_200_OK)
+
+    else:
+        return Response({"status": 0, "message": [str(serializer), serializer.errors]},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def api_Send_funds(request):
+    serializer = SendFundsSerializer(data=request.data)
+    if serializer.is_valid():
+        # Navigate to the doginals directory
+        directory_path = '/home/semi/Desktop/doginals'
+        os.chdir(directory_path)
+
+        # Remove wallet
+        command = 'rm -rf .wallet.json'
+        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        # Create Wallet
+        input_dict = ast.literal_eval(serializer.validated_data["wallet_data"])
+
+        # Create the wallet.json file
+        with open(f'.wallet.json', 'w') as f:
+            json.dump(input_dict, f, indent=4)
+
+        # Send funds
+        receiver_address = serializer.validated_data["receiver_address"]
+        quantity = int(serializer.validated_data["quantity"] * 10**8)
+        command = f'node . wallet send {receiver_address} {quantity}'
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
-
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
-
     else:
         return Response({"status": 0, "message": [str(serializer), serializer.errors]},
                         status=status.HTTP_500_INTERNAL_SERVER_ERROR)
