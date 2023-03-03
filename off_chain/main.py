@@ -178,12 +178,8 @@ def send_funds(doge_address, quantity):
     response = requests.request("POST", url, headers=headers, data=payload)
     print(response.text)
 
-
-send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 1)
-
-
-
 files = os.listdir(WALLETS_FOLDER_PATH)
 first_file = files[0]
 
+send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 0.1)
 print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
