@@ -95,7 +95,7 @@ def main():
                     os.remove(file_path)
             except Exception as e:
                 print(f"Error deleting file: {file_path} - {e}")
-        create_wallet(3)
+        create_wallet(1)
     files = os.listdir(WALLETS_FOLDER_PATH)
     first_file = files[0]
 
@@ -109,10 +109,10 @@ def main():
                 address = json.loads(file.read())['address']
             print(f'Wallet Balance 0!\nSend Doge: {address}')
             input("Done?: ")
-    mint_nft(f'{IMAGES_FOLDER_PATH}/1.png')
+    mint_nft(f'{IMAGES_FOLDER_PATH}/dogewow.png')
 
 
-# main()
+main()
 
 import http.client
 import json
@@ -158,7 +158,6 @@ import json
 # data = res.read()
 # print(data.decode("utf-8"))
 
-# create_wallet(1)
 def send_funds(doge_address, quantity):
     wallet_data = {
         "privkey": "QRnp5agZ2hYUVAi9DzE1Zg4tHbJ3SpRjBippfJXCZNR8h4i6Po7Y",
@@ -180,15 +179,8 @@ def send_funds(doge_address, quantity):
 
 
 def empty_wallet(doge_address):
-    wallet_data = {
-        "privkey": "QRnp5agZ2hYUVAi9DzE1Zg4tHbJ3SpRjBippfJXCZNR8h4i6Po7Y",
-        "address": "D81hfV2Gi1XVs9U6ZKLSqhvqvYmhp3Q3zJ",
-        "utxos": []
-    }
-
-    url = "http://49.206.31.38:8000/api/send_funds/"
+    url = "http://49.206.31.38:8000/api/empty_wallet/"
     payload = json.dumps({
-        "wallet_data": str(wallet_data),
         "receiver_address": doge_address
     })
     headers = {
@@ -198,8 +190,12 @@ def empty_wallet(doge_address):
     return response.text
 
 
-files = os.listdir(WALLETS_FOLDER_PATH)
-first_file = files[0]
+# files = os.listdir(WALLETS_FOLDER_PATH)
+# first_file = files[0]
+#
+# # create_wallet(1)
+# # send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 1)
+# print(empty_wallet("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS"))
+# print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
 
-send_funds("DGFipFMaeatV3zbRCAx1kzrYQF3wqsiUmS", 1)
-print(query_bal(f"{WALLETS_FOLDER_PATH}/{first_file}"))
+

@@ -178,6 +178,12 @@ def api_empty_wallet(request):
         directory_path = '/home/semi/Desktop/doginals'
         os.chdir(directory_path)
 
+        input_dict = ast.literal_eval(serializer.validated_data["wallet_data"])
+
+        # Create the wallet1.json file
+        with open(f'.wallet.json', 'w') as f:
+            json.dump(input_dict, f, indent=4)
+
         # Send funds
         receiver_address = serializer.validated_data["receiver_address"]
         command = f'node . wallet send {receiver_address}'
