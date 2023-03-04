@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 
 # Serializer
-from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer, EmptyWalletSerializer
+from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer, EmptyWalletSerializer, MintNFTOtherWalletSerializer
 
 # API
 from rest_framework import status
@@ -142,10 +142,48 @@ def api_mint_nft(request):
         data_dict = json.loads(output)
         address = data_dict['address']
 
-        time.sleep(1)
-
         # Mint NFT
         command = f'node . mint {address} {serializer.validated_data["file_name"]}.png'
+        mint_output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        print(mint_output, command)
+
+        # Send Funds back
+        command = f'node . wallet send {PROFIT_ADDRESS}'
+        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        return Response({"status": 1, "message": mint_output}, status=status.HTTP_200_OK)
+
+    else:
+        return Response({"status": 0, "message": [str(serializer), serializer.errors]},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def api_mint_nft_other_wallet(request):
+    serializer = MintNFTOtherWalletSerializer(data=request.data)
+    if serializer.is_valid():
+        base64_string = serializer.validated_data['base64']
+        binary_data = base64.b64decode(base64_string)
+
+        # Navigate to the doginals directory
+        directory_path = '/home/semi/Desktop/doginals'
+        os.chdir(directory_path)
+
+        # Save the binary data to a file
+        with open(f"{serializer.validated_data['file_name']}.png", "wb") as image_file:
+            image_file.write(binary_data)
+
+        command = f'node . wallet sync'
+        subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+
+        # Get address
+        command = f'cat .wallet.json'
+        output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+        data_dict = json.loads(output)
+
+        # Mint NFT
+        command = f'node . mint {serializer.validated_data["receiver_address"]} {serializer.validated_data["file_name"]}.png'
         mint_output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
 
         print(mint_output, command)

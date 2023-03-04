@@ -1,7 +1,6 @@
 import time
 import os
 import requests
-import json
 import random
 import threading
 import base64

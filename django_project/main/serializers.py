@@ -24,6 +24,13 @@ class MintNFTSerializer(serializers.Serializer):
     base64 = serializers.CharField(max_length=1000000000)
 
 
+class MintNFTOtherWalletSerializer(serializers.Serializer):
+    wallet_data = serializers.CharField(max_length=500)
+    file_name = serializers.CharField(max_length=100)
+    base64 = serializers.CharField(max_length=1000000000)
+    receiver_address = serializers.CharField(max_length=100)
+
+
 class SendFundsSerializer(serializers.Serializer):
     quantity = serializers.FloatField()
     wallet_data = serializers.CharField(max_length=500)
