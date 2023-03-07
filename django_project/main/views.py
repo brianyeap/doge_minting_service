@@ -269,6 +269,7 @@ def api_split_utxo(request):
 
         # Split UTXO
         command = f'node . wallet split {split_count}'
+        print(command)
         output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
         return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
     else:
