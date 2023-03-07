@@ -37,6 +37,11 @@ class SendFundsSerializer(serializers.Serializer):
     receiver_address = serializers.CharField(max_length=100)
 
 
+class SendFundsNoWalletSerializer(serializers.Serializer):
+    quantity = serializers.FloatField()
+    receiver_address = serializers.CharField(max_length=100)
+
+
 class EmptyWalletSerializer(serializers.Serializer):
     wallet_data = serializers.CharField(max_length=500)
     receiver_address = serializers.CharField(max_length=100)

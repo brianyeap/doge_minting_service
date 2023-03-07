@@ -16,7 +16,7 @@ from django.contrib.auth import authenticate
 from django.contrib.auth import login, logout
 
 # Serializer
-from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer, EmptyWalletSerializer, MintNFTOtherWalletSerializer, SplitUtxoSerializer
+from .serializers import CreateWalletSerializer, QueryBalanceSerializer, MintNFTSerializer, SendFundsSerializer, EmptyWalletSerializer, MintNFTOtherWalletSerializer, SplitUtxoSerializer, SendFundsNoWalletSerializer
 
 # API
 from rest_framework import status
@@ -217,6 +217,29 @@ def api_send_funds(request):
         # Create the wallet.json file
         with open(f'.wallet.json', 'w') as f:
             json.dump(input_dict, f, indent=4)
+
+        command = 'node . wallet sync'
+        print(subprocess.check_output(command.split(), stderr=subprocess.STDOUT))
+
+        # Send funds
+        receiver_address = serializer.validated_data["receiver_address"]
+        quantity = int(serializer.validated_data["quantity"] * 10 ** 8)
+        print(f'node . wallet send {receiver_address} {quantity}')
+        command = f'node . wallet send {receiver_address} {quantity}'
+        output = subprocess.check_output(command.split(), stderr=subprocess.STDOUT)
+        return Response({"status": 1, "message": output}, status=status.HTTP_200_OK)
+    else:
+        return Response({"status": 0, "message": [str(serializer), serializer.errors]},
+                        status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@api_view(['POST'])
+def api_send_funds_no_wallet(request):
+    serializer = SendFundsSerializer(data=request.data)
+    if serializer.is_valid():
+        # Navigate to the doginals directory
+        directory_path = '/home/semi/Desktop/doginals'
+        os.chdir(directory_path)
 
         command = 'node . wallet sync'
         print(subprocess.check_output(command.split(), stderr=subprocess.STDOUT))
