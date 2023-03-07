@@ -235,7 +235,7 @@ def api_send_funds(request):
 
 @api_view(['POST'])
 def api_send_funds_no_wallet(request):
-    serializer = SendFundsSerializer(data=request.data)
+    serializer = SendFundsNoWalletSerializer(data=request.data)
     if serializer.is_valid():
         # Navigate to the doginals directory
         directory_path = '/home/semi/Desktop/doginals'
